@@ -1,0 +1,23 @@
+<%- include('../templates/header') %>
+<%- include('../templates/navbar') %>
+
+<div class="container mt-5">
+    <div class="d-flex flex-column align-items-center">
+        <h1>Modifier le post</h1>
+
+        
+
+        <form action="/posts/edit/<%= post._id %>" method="POST">
+            <div class="form-group">
+                <label for="title">Titre</label>
+                <input type="text" class="form-control" name="title" value="<%= post.title %>" required>
+            </div>
+            <div class="form-group">
+                <label for="title">Contenu</label>
+                <textarea class="form-control" name="content"  cols="30" rows="10" required><%= post.content %></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 mx-auto">Modifier</button>
+        </form>
+    </div>
+</div>
+<%- include('../templates/footer') %>

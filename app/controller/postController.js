@@ -7,9 +7,9 @@ exports.showHome = async (req, res) => {
         const user = req.user._id;
 
         //on recupère les posts du user connecté
-        const posts = await Post.find({ author: userId }.sort({ created_at: 'desc' }));
+        const userPosts = await Post.find({ author: user });
         //on affiche la page d'accueil avec les post du user connecté
-        res.render('home', { userPosts });
+        res.render('accueil', { userPosts });
 
     } catch (error) {
         console.log(error);
@@ -43,3 +43,24 @@ exports.addPost = async (req, res) => {
         res.render('post/add', { error: 'Une erreur est survenue' });
     }
 };
+
+//méthode afficher le formulaires qui modifie les post
+exports.showEditPost = async (req, res) => {
+    try {
+        //on récupère l'id du post
+        const postId = req.params.id;
+        //on recupère les données du post grace a son id
+
+        const post = await Post.findById(postId);
+
+        //on verifie que le post appartient bien au user connecter
+        if (post.author.equals(req.user._id)) {
+            //on renvoie la vue de modification de post avec les données du post
+            return res.render('post/edit', { post: post });
+        } else {
+            res.redirect('/');
+        }
+    } catch (error) {
+        res.render('post/edit', { error: 'Une erreur est survenue, veuillez réessayer' });
+    }
+}
