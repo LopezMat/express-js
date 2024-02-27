@@ -1,0 +1,17 @@
+<%- include('./templates/header') %>
+<div class="container mt-5">
+<h1>Connexion</h1>
+
+<form action="/login" method="POST">
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Se connecter</button>
+</form>
+</div>
+<%- include('./templates/footer') %>

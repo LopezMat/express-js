@@ -1,0 +1,29 @@
+<%- include('./templates/header') %>
+<div class="container mt-5">
+
+  <h1>Créer un compte</h1>
+  
+  <% if (error !== null) { %>
+  <div class="alert alert-danger" role="alert">
+    <%= error %>
+  </div>
+  <% } %>
+
+  <form action="/register" method="POST">
+    <div class="mb-3">
+      <label for="name" class="form-label">Nom</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Mot de passe</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
+  </form>
+</div>
+
+<%- include('./templates/footer') %>
