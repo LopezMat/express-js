@@ -12,7 +12,7 @@ require('dotenv').config();
 const app = express();
 
 //connexion a MongoDB
-mongoose.connect(processs.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   // useNewUrlParser: true,
   // useUnifiedTopology: true
 })
@@ -30,6 +30,9 @@ app.use(bodyParser.json());
 //Configuration du passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+//Configuration du dossier public
+app.use(express.static('public'));
 
 //configuration des messages flash
 app.use(flash());
