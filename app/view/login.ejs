@@ -2,6 +2,12 @@
 <div class="container mt-5">
 <h1>Connexion</h1>
 
+<% if(messages.error && messages.error.length > 0) { %>
+    <div class="alert alert-danger" role="alert">
+        <%= messages.error %>
+    </div>
+<% } %>
+
 <form action="/login" method="POST">
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>

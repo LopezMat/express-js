@@ -6,24 +6,25 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const ejs = require('ejs');
 const flash = require('express-flash');
+require('dotenv').config();
 
 //initialisation de l'application
 const app = express();
 
 //connexion a MongoDB
-mongoose.connect('mongodb://expressmongo:27017/mongoexpress',{
+mongoose.connect(processs.env.MONGODB_URI, {
   // useNewUrlParser: true,
   // useUnifiedTopology: true
 })
 //Configuration de la session
 app.use(session({
-  secret:'user_info', //clé secrète pour crypter les données
+  secret: process.env.SESSION_SECRET, //clé secrète pour crypter les données
   resave: true,//sauvegarde de la session à chaque requête
   saveUninitialized: true //sauvegarde des sessions vides
 }));
 
 //bodyParser : middleware pour parser les requêtes
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Configuration du passport
@@ -47,7 +48,7 @@ app.set('view engine', 'ejs');
 app.set('views', './view');
 
 //Ecoute du serveur sur le port 3000
-const PORT = 3000;
-app.listen(PORT, ()=>{
+const PORT = process.env.PORT || 3000;
+app.listen(process.env.PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 })
