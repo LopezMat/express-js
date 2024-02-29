@@ -12,7 +12,7 @@ exports.showHome = async (req, res) => {
         res.render('accueil', { userPosts });
 
     } catch (error) {
-        console.log(error);
+
     }
 };
 
@@ -49,8 +49,8 @@ exports.showEditPost = async (req, res) => {
     try {
         //on récupère l'id du post
         const postId = req.params.id;
-        //on recupère les données du post grace a son id
 
+        //on recupère les données du post grace a son id
         const post = await Post.findById(postId);
 
         //on verifie que le post appartient bien au user connecter
@@ -64,3 +64,92 @@ exports.showEditPost = async (req, res) => {
         res.render('post/edit', { error: 'Une erreur est survenue, veuillez réessayer' });
     }
 }
+
+
+//  1 er méthode qui met a jours un post
+exports.editPost = async (req, res) => {
+    try {
+        //on recupère les données du post
+        const { title, content } = req.body;
+        //on récupère l'id du post
+        const postId = req.params.id;
+        //on met à jour le post
+        const post = await Post.findById(postId);
+
+        //on verifie si l'utilisateur est bien l'auteur du post
+        if (post.author.equals(req.user._id)) {
+            //on met à jour le post
+            post.title = title;
+            post.content = content;
+            post.updated_at = new Date();
+            //on sauvegarde le post
+            await post.save();
+            //on redirige vers la page d'accueil
+            res.redirect('/');
+
+        } else {
+            //on redirige vers la page d'accueil
+            res.redirect('/');
+        }
+    } catch (error) {
+        //on retourne un message d'erreur
+        res.render('post/edit', { error: 'Une erreur est survenue, veuillez réessayer' });
+    }
+}
+
+// 2 eme méthode qui met a jours un post
+// exports.editPost = async (req, res) => {
+//     try {
+//         //on recupère les données du post
+//         const { title, content } = req.body;
+//         //on récupère l'id du post
+//         const postId = req.params.id;
+//         //on met à jour le post
+//         const post = await Post.findById(postId);
+
+//         //on verifie si l'utilisateur est bien l'auteur du post
+//         if (post.author.equals(req.user._id)) {
+//             //on met à jour le post
+//             await Post.updateOne({ _id: postId }, { title: title, content: content });
+//             //on redirige vers la page d'accueil
+//             res.redirect('/');
+//         } else {
+//             res.redirect('/');
+//         }
+//     } catch (error) {
+//         //on retourne un message d'erreur
+//         res.render('post/edit', { error: 'Une erreur est survenue, veuillez réessayer' });
+//     }
+// 
+
+
+//méthode qui suprime le post
+exports.deletePost = async (req, res) => {
+    try {
+        //on recupère l'id du post
+        const postId = req.params.id;
+
+        //on recupère le post grace a son id
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).send('404', { message: 'Arrete de jouer avec les urls' });
+        }
+
+        //on verifie que le post appartient bien au user connecter
+        if (post.author.equals(req.user._id)) {
+            //on supprime le post
+            await Post.deleteOne({ _id: postId });
+            //on redirige vers la page d'accueil
+            res.redirect('/');
+        } else {
+            //on redirige vers la page d'accueil
+            res.redirect('/');
+        }
+    } catch (error) {
+
+    }
+}
+
+
+

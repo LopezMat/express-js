@@ -1,0 +1,44 @@
+<%- include('../templates/header') %>
+<%- include('../templates/navbar') %>
+
+<div class="container mt-5">
+    <div class="d-flex flex-column align-items-center">
+        <h1>Modifier le compte</h1>
+
+        <% if (error) { %>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
+            </div>
+        <% } %>
+
+        
+
+        <form action="/users/profile" method="POST">
+            <div class="form-group">
+                <label for="nom">Nom</label>
+                <input type="text" class="form-control" name="nom" value="<%= user.name %>" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" name="email" value="<%= user.email %>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="ancien_mdp">Ancien mot de passe</label>
+                <input type="password" class="form-control" name="ancien_mdp" value="" required>
+            </div>
+            <div class="form-group">
+                <label for="new_mdp">Nouveau mot de passe</label>
+                <input type="password" class="form-control" name="new_mdp" value="" required>
+            </div>
+            <div class="form-group">
+                <label for="new_mdp_confirm">Nouveau mot de passe</label>
+                <input type="password" class="form-control" name="new_mdp_confirm" value="" required>
+            </div>
+
+            
+            <button type="submit" class="btn btn-primary mt-3 mx-auto">Modifier</button>
+        </form>
+    </div>
+</div>
+<%- include('../templates/footer') %>

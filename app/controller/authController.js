@@ -42,7 +42,7 @@ exports.registerUser = async (req, res) => {
   }
 }
 
-//affiche le fom de connexion 
+//affiche le form de connexion 
 exports.showLoginForm = (req, res) => {
   res.render('login');
 }
@@ -59,5 +59,76 @@ exports.logoutUser = (req, res) => {
   req.logout();
   res.redirect('/login');
 }
+
+//méthode pour afficher le formulaire de modification de compte
+exports.showEditProfile = async (req, res) => {
+  try {
+    //on récupère l'id du user
+    const userId = req.user._id;
+
+    //on recupère le user grace a son id
+    const user = await User.findById(userId);
+
+    //on verifie que le compte appartient bien au user connecter
+    if (user._id.equals(req.user._id)) {
+      //on affiche le formulaire de modification de compte
+      return res.render('user/profile', { error: null, user: user });
+    } else {
+      res.redirect('/');
+    }
+
+  } catch (error) {
+    //on affiche le formulaire de modification de compte avec un message d'erreur
+    res.render('user/profile', { error: 'Une erreur est survenue, veuillez réafficher le formulaire' });
+  }
+};
+
+//méthode qui met à jour le compte
+exports.editProfile = async (req, res) => {
+  try {
+    //on recupère les nouveaux données du user
+    const { nom, email } = req.body;
+    //on recupère l'id du user
+    const userId = req.user._id;
+    //on verifie de le mail n'existe pas deja
+    const existingUser = await User.findOne({ email });
+    if (existingUser && !existingUser._id.equals(userId)) {
+      return res.render('user/profile', { error: 'Email déja utilisé', user: req.user });
+    }
+
+    //On verifie si l'ancien mot de passe est le bon
+    const user = await User.findById(userId);
+    if (!await bcrypt.compare(req.body.ancien_mdp, user.password)) {
+      return res.render('user/profile', { error: 'Le mot de passe est incorrect', user: req.user });
+    }
+
+    console.log('b');
+
+    //on verifie que les nouveaux mot de passe soit identiques
+    if (req.body.new_mdp !== req.body.new_mdp_confirm) {
+      return res.render('user/profile', { error: 'Les nouveaux mots de passe ne sont pas identiques', user: req.user });
+    }
+    console.log('c');
+    //on verifie que les champs soient remplis
+    if (nom === '' || email === '') {
+      return res.render('user/profile', { error: 'Tous les champs doivent être remplis', user: req.user });
+    }
+    console.log('d');
+
+    //on met à jour le user
+    user.name = nom;
+    user.email = email;
+    user.password = await bcrypt.hash(req.body.new_mdp, 10);
+    console.log('e');
+    //on sauvegarde le user
+    await user.save();
+    console.log('f');
+    res.redirect('/');
+  } catch (error) {
+    //on affiche le formulaire de modification de compte avec un message d'erreur
+    res.render('user/profile', { error: 'Une erreur est survenue, veuillez réafficher le formulaire', user: req.user });
+  }
+}
+
 
 

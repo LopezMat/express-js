@@ -17,6 +17,9 @@ router.get('/register', authController.showRegistrationForm);
 //Route qui receptionne les données du formulaire de création de compte
 router.post('/register', authController.registerUser);
 
+//route qui permait de deconnecter un user
+router.get('/logout', authController.logoutUser);
+
 
 module.exports = router;
 
